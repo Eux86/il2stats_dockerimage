@@ -1,0 +1,23 @@
+services:
+  python-webserver:
+    build: .
+    ports:
+      - 8081:8081
+    networks:
+      database:
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    container_name: gemini_server_stats_web
+  db:
+    image: "postgres"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: il2_stats
+    networks:
+      database:
+        aliases:
+          - "database"
+    container_name: gemini_server_stats_db
+
+networks:
+  database:
