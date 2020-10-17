@@ -1,9 +1,11 @@
+version: '3.1'
+
 services:
   il2stats-web:
     build: .
     environment:
-      ADMIN_EMAIL: /run/secrets/il2stats_admin_email
-      ADMIN_PASSWORD: /run/secrets/il2stats_admin_password
+      ADMIN_EMAIL: your@email.com
+      ADMIN_PASSWORD: 123qwe*
     ports:
       - 8081:8080
     networks:
@@ -14,14 +16,15 @@ services:
     depends_on:
       - db
     volumes:
-      - game_folder:/user/local/il2gamefolder:ro
-      - il2stats_config_file:/user/local/il2_stats/src/config.ini:ro
+      - /mnt/il2/:/user/local/il2gamefolder:ro
+      # - ./il2stats_conf.ini:/user/local/il2_stats/src/conf.ini:ro
+
 
   db:
     image: "postgres"
     environment:
-      POSTGRES_PASSWORD: /run/secret/postgres_password
-      POSTGRES_USER: /run/secrets/postgres_user
+      POSTGRES_PASSWORD: 123qwe*
+      POSTGRES_USER: il2_stats
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "16542:5432"
@@ -29,51 +32,24 @@ services:
       database:
     container_name: postgres
     volumes:
-      - D:\Users\Eux\Documents\il2_stats_db:/var/lib/postgresql/data/pgdata:rw
+      - ~/il2stats_db:/var/lib/postgresql/data/pgdata:rw
     
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: /run/secrets/pgadmin_default_email
-      PGADMIN_DEFAULT_PASSWORD: /run/secrets/pgadmin_default_password
-      DEFAULT_SERVER_PORT: 5050
-    ports:
-      - "16543:80"
-    depends_on:
-      - db
-    networks:
-      database:
-    volumes:
-      - D:\Users\Eux\Documents\il2_stats_pgadmin:/var/lib/pgadmin:rw
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: your@email.com
+  #     PGADMIN_DEFAULT_PASSWORD: 123qwe*
+  #     DEFAULT_SERVER_PORT: 5050
+  #   ports:
+  #     - "16543:80"
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     database:
+  #   # volumes:
+  #     # - /mnt/d/Users/Eux/Documents/il2stats_pgadmin:/var/lib/pgadmin:rw
 
 networks:
   database:
     
-secrets:
-  il2stats_admin_email: 
-    file: ./secrets/il2stats_admin_email.txt
-  il2stats_admin_password: 
-    file: ./secrets/il2stats_admin_password.txt
-  pgadmin_default_email: 
-    file: ./secrets/pgadmin_default_email.txt
-  pgadmin_default_password: 
-    file: ./secrets/pgadmin_default_password.txt
-  postgres_user: 
-    file: ./secrets/postgres_user.txt
-  postgres_password: 
-    file: ./secrets/pgadmin_default_password.txt
-  
-volumes:
-  game_folder:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: 'F:\Games\1C Game Studios\IL-2 Sturmovik Battle of Stalingrad'
-  il2stats_config_file:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: il2stats_config.ini

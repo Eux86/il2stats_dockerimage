@@ -28,7 +28,7 @@ echo "Done."
 
 echo "Starting Creation of superuser..."
 # ../.venv/bin/python manage.py createsuperuser
-printf "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser(username='yourUsername', password='YourPassword', email='your@email.PK')" | ../.venv/bin/python manage.py shell
+printf "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser(username='admin', password='$ADMIN_PASSWORD', email='$ADMIN_EMAIL')" | ../.venv/bin/python manage.py shell
 
 # read -p "Press any key to continue... "
 echo "Done."
